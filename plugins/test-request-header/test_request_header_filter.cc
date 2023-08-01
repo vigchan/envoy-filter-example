@@ -1,6 +1,6 @@
 #include <string>
 #include <stdexcept>
-
+#include <unistd.h>
 #include "test_request_header_filter.h"
 
 #include "envoy/server/filter_config.h"
@@ -27,13 +27,29 @@ const std::string TestRequestHeaderFilter::headerValue() const {
   return config_->val();
 }
 
+const std::string gen_random(const int len) {
+  static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    std::string tmp_s;
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i) {
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+    return tmp_s;
+}
+
 FilterHeadersStatus TestRequestHeaderFilter::decodeHeaders(RequestHeaderMap& headers, bool) {
   // add a header
-  headers.setCopy(headerKey(), headerValue());
-  headers.addCopy(LowerCaseString(std::string("User-Agent")), std::string("The Ghost from envoy"));
-  //headers.addCopy(LowerCaseString(std::string("X-LinkedIn-Header-2")), std::string("This is header 2"));
-  // headers.addCopy(LowerCaseString(std::string("X-LinkedIn-Header-3")), std::string("This is header 3"));
-  // headers.addCopy(LowerCaseString(std::string("X-LinkedIn-Header-4")), std::string("This is header 4"));
+  for(int i=0; i < 100; i++) {
+    headers.setCopy(LowerCaseString(std::string("user-agent-") + std::to_string(i)), std::string("test-sample-header-response") + std::to_string(i));
+  }
+
+  headers.setCopy(LowerCaseString(std::string("user-agent-100")), gen_random(1000) + std::to_string(100));
+  headers.setCopy(LowerCaseString(std::string("user-agent-101")), gen_random(1000) + std::to_string(101));
+  headers.setCopy(LowerCaseString(std::string("user-agent-102")), gen_random(1000) + std::to_string(102));
   return FilterHeadersStatus::Continue;
 }
 
