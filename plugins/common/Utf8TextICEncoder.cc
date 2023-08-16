@@ -16,15 +16,15 @@ Utf8TextICEncoder::Utf8TextICEncoder() {
 void Utf8TextICEncoder::initializeSafeOctets() {
 
     for(char ch='0'; ch <= '9'; ch++) {
-        m_defaultSafeOctets[ch] = true;
+        m_defaultSafeOctets[static_cast<int>(ch)] = true;
     }
 
     for(char ch='A'; ch <= 'Z'; ch++) {
-        m_defaultSafeOctets[ch] = true;
+        m_defaultSafeOctets[static_cast<int>(ch)] = true;
     }
 
     for(char ch='a'; ch <= 'z'; ch++) {
-       m_defaultSafeOctets[ch] = true;
+       m_defaultSafeOctets[static_cast<int>(ch)] = true;
     }
 
     const char otherChars[] = {'-', '_', '.', '*'};
