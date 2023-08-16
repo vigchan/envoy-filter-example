@@ -41,15 +41,42 @@ const std::string gen_random(const int len) {
     return tmp_s;
 }
 
+void gen_random_ref(const int len, std::string& tmp_s) {
+  static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+
+    for (int i = 0; i < len; ++i) {
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+}
 FilterHeadersStatus TestRequestHeaderFilter::decodeHeaders(RequestHeaderMap& headers, bool) {
   // add a header
-  for(int i=0; i < 100; i++) {
-    headers.setCopy(LowerCaseString(std::string("user-agent-") + std::to_string(i)), std::string("test-sample-header-response") + std::to_string(i));
+  for(int i=0; i < 90; i++) {
+    headers.setCopy(LowerCaseString(std::string("user-agent-") + std::to_string(i)), std::string("test-sample-header-response-benchmark") + std::to_string(i));
   }
+  std::string tmp_s1, tmp_s2, tmp_s3;
+  tmp_s1.reserve(1004);
+  tmp_s2.reserve(1004);
+  tmp_s3.reserve(1004);
 
-  headers.setCopy(LowerCaseString(std::string("user-agent-100")), gen_random(1000) + std::to_string(100));
-  headers.setCopy(LowerCaseString(std::string("user-agent-101")), gen_random(1000) + std::to_string(101));
-  headers.setCopy(LowerCaseString(std::string("user-agent-102")), gen_random(1000) + std::to_string(102));
+  tmp_s1 += std::string("XVlBzgbaiCMRAjWwhTHctcuAxhxKQFDaFpLSjFbcXoEFfRsWxPLDnJObCsNVlgTeMaPEZQleQYhYzRyWJjPjzpfRFEgmotaFetHsbZRjxAwnwekrBEmfdzdcEkXBAkjQZLCtTMtTCoaNatyyiNKAReKJyiXJrscctNswYNsGRussVmaozFZBsbOJiFQGZsnwTKSmVoiGLOpbUOpEdKupdOMeRVjaRzLNTXYeUCWKsXbGyRAOmBTvKSJfjzaLbtZsyMGeuDtRzQMDQiYCOhgHOvgSeycJPJHYNufNjJhhjUVRuSqfgqVMkPYVkURUpiFvIZRgBmyArKCtzkjkZIvaBjMkXVbWGvbqzgexyALBsdjSGpngCwFkDifIBuufFMoWdiTskZoQJMqrTICTojIYxyeSxZyfroRODMbNDRZnPNRWCJPMHDtJmHAYORsUfUMApsVgzHblmYYtEjVgwfFbbGGcnqbaEREunUZjQXmZOtaRLUtmYgmSVYBADDvoxIfsfgPyCKmxIubeYTNDtjAyRRDedMiyLprucjiOgjhYeVwBTCMLfrDGXqwpzwVGqMZcLVCxaSJlDSYEofkkEYeqkKHqgBpnbPbgHMLUIDjUMmpBHCSjMJjxzuaiIsNBakqSwQpOQgNczgaczAInLqLIbAatLYHdaopovFOkqIexsFzXzrlcztxcdJJFuyZHRCovgpVvlGsXalGqARmneBZBFelhXkzzfNaVtAyyqWzKqQFbucqNJYWRncGKKLdTkNyoCSfkFohsVVxSAZWEXejhAquXdaaaZlRHoNXvpayoSsqcnCTuGZamCToZvPynaEphIdXaKUaqmBdtZtcOfFSPqKXSLEfZAPaJzldaUEdhITGHvBrQPqWARPXPtPVGNpdGERwVhGCMdfLitTqwLUecgOczXTbRMGxqPexOUAbUdQrIPjyQyQFStFubVVdHtAknjEQxCqkDIfTGXeJtuncbfqQUsXTOdPORvAUkAwww");
+
+  tmp_s2 += std::string("TndUJHiQecbxzvqzlPWyqOsUbLnAIPRYxdkhCBcgRVdrSfOWLQrCNPANWvkkOdejVcugMVTnMUqBcVFohTtUTuWJRGiQjOTcVwHjKVtPoVVTYNXfTjPcDeMixVduzfhinMkGuotVuZJUuZkJwQsrzoVWaYedKZpEKrSOKAaKzKaWlfVcjYMcwVxDrnsfUrCFsVySzWtbpwvkbeRKvUdUyRSgDknQXeAJnkxLkNKWWUEqSfzvxvjTsnzIMKcSiStqDUZsoLEziJiWmAPKvATdjZyEvvmsIDSJeKovPdQSnyNSLTvmwZLbKtziYpTpzlFPhUhSWZdgpyWsRCkctWdcUosnpMVHZdiyeoUqzMJGHOxYTsbfqAqtXjkVItIBhgIvarcSbblmmHEfnwcNjQpkSlxkkUvYxTocDoTiUUJeVakGzAALtLhTUZHJOxKmRNwKDOUnXzmDikdJPukQLaxAHzFSnsZRqGNADbebYsIIwcKGFxUvaLskaPVQqUQnzXSfBigfpkmlDQoLjksSjFLLBLbuEhZFxQuvApLIPkPzXDPizdhpgJsjyBqaYFyqjyZdUShIIWpUYaqBhqHzoCIkjKQbHjIwqPZdSYRMmFeYRrkuEqCuPDMNeuiKTxRINKSzjAIvxBRDRLmciVEWlUwPHdPiHZuUiUFXrgXbHMbjeBvZwcJXyXLoetEAKetWXUDXJDUtrnryhmSlaOSSUVsZsmHKaNgeqzCZeWGRrDuCuWPtQAqMTyVfpvpkHdgWhxbhMSAcmaAvASRDtXBDGnMCDMOfzVWicMsnOkZlIUNSsCraKQBrSfkMAIStKMupnCMvADvezKymxCWrwlUxbdMAyhEcgCTauBGlunxyyOMAmrfxygzWgLcDnnMAWeJSYZBjGdAeQxmvLHqeeizRbUesPXmQumDoPOnnQVNsqKkejfUlxsWAwWjtpZBrWZKvdEANNUPkaNBORKcOQYawyaytedjZtrpZTljvjyNubgyU");
+
+  tmp_s3 += std::string("rETWdtOoPuIaFONFwrxmPGDUaMiraBzMlulhxkKvSvnXEUmQuNfIqPjHTcdmcQRyRegnCPCePNnimQoCNrtHHZSHVyIifKqRwXVBMhXNhuqXwvAqhnQXRQSXFJLDKmsJvvoFlpVssIAYkbKrImXeoveCluuuNdNJGMnLVgpITBPZGJZlDkAcDeOtKifMofRksnOKExQBQzIWdJnunSelbYYOzQJYZuYsIIVQniApTAIwFjxvlksQbJajXgvWVWGCniuyxyhXphnvyQQHwnzDRITguovpoGAtItTvRaEDtMbmKEEksgqibDiuAMPEkWUVcnYIYLIFCmbXzmAumYLwoHOHbYhEMHUIaCnkiALLfQEADWUAUeUdAOQmFjxfAzsDjAsjwttyMUOopasuhTESsDemerTKSzUdvZOjUrNyHXgwcGZyYCDAokdrOQioJHWwqbeWPZBPYYlgTvJYNOnKOMIkroYgnQkALVSDTcUfAdtzlLwwZUBUQPrhVthbTtgjFepZBAdbGDyMThoDrRwkOKoYvEcEIkUZpqyyWpLpdgInRQXYUsryZTqryjyDaOtvUvVJhEZGuZITIVyonUOuTKhtdSGddzgtAHxOrdVEDlYNUzOTCyrcQnuMZnigcFJHUgNTnlLJkTgDCopMSpiJBFCPdPhsGJzkaoIJIxIUZrAIchbkWPjwjpZlWqgmJVyXXwFqkmXNMGpFlkYFlhYVpIyJaJBWtOfGtDtzZJfCTtmKiAJuMlZgAzFIbwZIDZXEiOGZCHZMIntqKThKtfIudpvNkMpptmrHQfeakFOeZddIQVFiRudbwUeMgoeHHrLiHQjgGbLjugFFMZMgFPNXVKpyMQyfrRaoxIsmSbkYdrnGTUJfiCkQZkLSuZBPWvvYnvTKcWRNaacuLGQcqNpPxvGOXZaTcxkUZRzJXLkfbeNGEgdnLLmXSYGluJVOpzrcMjBUWVaGbdRmifvVDtAgGbbfyLMreEphgESvQlJl");
+  //gen_random_ref(1000, tmp_s1);
+  //gen_random_ref(1000, tmp_s2);
+  //gen_random_ref(1000, tmp_s3);
+
+  tmp_s1 += std::string("plugin-100");
+  tmp_s2 += std::string("plugin-101");
+  tmp_s3 += std::string("plugin-102");
+ 
+  headers.setCopy(LowerCaseString(std::string("user-plugin-agent-100")), tmp_s1);
+  headers.setCopy(LowerCaseString(std::string("user-plugin-agent-101")), tmp_s2);
+  headers.setCopy(LowerCaseString(std::string("user-plugin-agent-102")), tmp_s3);
   return FilterHeadersStatus::Continue;
 }
 

@@ -3,6 +3,7 @@
 #include <string>
 
 #include "source/extensions/filters/http/common/pass_through_filter.h"
+#include "source/common/json/json_loader.h"
 
 #include "plugins/test-response-header/test_response_header.pb.h"
 
@@ -13,12 +14,18 @@ class TestResponseHeaderFilterConfig {
 public:
   TestResponseHeaderFilterConfig(const sample::TestResponseEcho& proto_config);
 
-  const std::string& key() const { return key_; }
-  const std::string& val() const { return val_; }
+  const std::string& appname() const { return m_appname; }
+  const std::string& hostname() const { return m_hostname; }
+  const std::string& servicename() const { return m_servicename; }
+  const std::string& env() const { return m_env; }
+  const std::string& instance() const { return m_instance; }
 
 private:
-  const std::string key_;
-  const std::string val_;
+  const std::string m_appname;
+  const std::string m_hostname;
+  const std::string m_servicename;
+  const std::string m_env;
+  const std::string m_instance;
 };
 
 using TestResponseHeaderFilterConfigSharedPtr = std::shared_ptr<TestResponseHeaderFilterConfig>;
@@ -31,17 +38,15 @@ public:
   // Http::StreamFilterBase
   void onDestroy() override;
 
-  // Http::StreamDecoderFilter
+  // Http::StreamEncoderFilter
   FilterHeadersStatus decodeHeaders(RequestHeaderMap&, bool) override;
   FilterDataStatus decodeData(Buffer::Instance&, bool) override;
   void setDecoderFilterCallbacks(StreamDecoderFilterCallbacks&) override;
 
 private:
   const TestResponseHeaderFilterConfigSharedPtr config_;
-  StreamDecoderFilterCallbacks* decoder_callbacks_;
-
-  const LowerCaseString headerKey() const;
-  const std::string headerValue() const;
+  StreamDecoderFilterCallbacks* encoder_callbacks_;
+  std::string generateCallTreeData(Json::ObjectSharedPtr jsonloader);
 };
 
 } // namespace Http

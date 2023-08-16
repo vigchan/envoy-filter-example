@@ -14,6 +14,7 @@ envoy_cc_binary(
     repository = "@envoy",
     deps = [
         "//plugins/test-request-header:test_request_header_config",
+        "//plugins/test-plugin-header:test_plugin_header_config",
         "//plugins/test-response-header:test_response_header_config",
         "@envoy//source/exe:envoy_main_entry_lib",
     ],

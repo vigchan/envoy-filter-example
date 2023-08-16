@@ -12,7 +12,7 @@ envoy_cc_binary(
     name = "envoy",
     repository = "@envoy",
     deps = [
-        ":test_response_header_config",
+        ":test_plugin_header_config",
         "@envoy//source/exe:envoy_main_entry_lib",
     ],
 )
@@ -20,33 +20,30 @@ envoy_cc_binary(
 api_proto_package()
 
 envoy_cc_library(
-    name = "test_response_header_filter_lib",
-    srcs = ["test_response_header_filter.cc"],
-    hdrs = ["test_response_header_filter.h"],
+    name = "test_plugin_header_filter_lib",
+    srcs = ["test_plugin_header_filter.cc", "MemberTokenParser.cc"],
+    hdrs = ["test_plugin_header_filter.h", "MemberTokenParser.h"],
     repository = "@envoy",
     deps = [
-        "@envoy//source/common/common:assert_lib",
-        "@envoy//source/common/common:minimal_logger_lib",
-        "//plugins/common:test_plugins_common",
-        "@envoy//source/common/json:json_loader_lib",
         ":pkg_cc_proto",
+        "//plugins/common:test_plugins_common",
         "@envoy//source/extensions/filters/http/common:pass_through_filter_lib",
     ],
 )
 
 envoy_cc_library(
-    name = "test_response_header_config",
-    srcs = ["test_response_header_config.cc"],
+    name = "test_plugin_header_config",
+    srcs = ["test_plugin_header_config.cc"],
     repository = "@envoy",
     deps = [
-        ":test_response_header_filter_lib",
+        ":test_plugin_header_filter_lib",
         "@envoy//envoy/server:filter_config_interface",
     ],
 )
 
 envoy_cc_test(
-    name = "test_response_header_filter_integration_test",
-    srcs = ["test_response_header_filter_integration_test.cc"],
+    name = "test_plugin_header_filter_integration_test",
+    srcs = ["test_plugin_header_filter_integration_test.cc"],
     repository = "@envoy",
     deps = [
         ":test_request_header_filter_config",

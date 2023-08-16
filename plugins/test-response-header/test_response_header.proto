@@ -5,6 +5,9 @@ package sample;
 import "validate/validate.proto";
 
 message TestResponseEcho {
-    string key = 1 [(validate.rules).string.min_bytes = 1];
-    string val = 2 [(validate.rules).string.min_bytes = 1];
+    string appname = 1 [(validate.rules).string.min_bytes = 1];
+    string hostname = 2 [(validate.rules).string.min_bytes = 1];
+    string servicename = 3 [(validate.rules).string.min_bytes = 1];
+    string env = 4 [(validate.rules).string.min_bytes = 1];
+    string instance = 5 [(validate.rules).string.min_bytes = 1];
 }

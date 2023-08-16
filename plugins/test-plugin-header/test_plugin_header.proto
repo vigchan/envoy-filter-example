@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package sample;
+
+import "validate/validate.proto";
+
+message TestPluginResponseEcho {
+    string key = 1 [(validate.rules).string.min_bytes = 1];
+    string val = 2 [(validate.rules).string.min_bytes = 1];
+}
+
+
+message MemberToken {
+   uint32 version = 1;
+   uint32 version_key = 2; 
+   int64 member_id = 3;
+   int32 session_id = 4;
+   int64 login_timestamp = 5;
+   int64 expiration_timestamp = 6;
+   string member_urn = 7;
+   string issuing_colo = 8;
+}
